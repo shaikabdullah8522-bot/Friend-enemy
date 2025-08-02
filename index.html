@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Enemy Day</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <style>
+    body {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(to right, #ff4d4d, #990000);
+      color: white;
+    }
+    .emoji {
+      position: absolute;
+      bottom: -10px;
+      font-size: 24px;
+      animation: floatUp 6s infinite ease-in;
+    }
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0);
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-800px);
+        opacity: 0;
+      }
+    }
+    .lightning {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+    .flash {
+      animation: flashAnim 0.3s ease-in-out;
+    }
+    @keyframes flashAnim {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      40% { opacity: 0; }
+      60% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center text-center">
+  <div id="emoji-container"></div>
+  <div id="lightningEffect" class="lightning"></div>
+  <div class="bg-black bg-opacity-70 p-8 rounded-2xl shadow-2xl max-w-md w-full relative z-10 border-2 border-red-500">
+    <h1 class="text-4xl font-bold text-red-400 mb-4 animate-pulse">😈 Happy Enemy Day 😈</h1>
+    <p class="text-gray-300 mb-6">Enter your name to unlock your special “Enemy” surprise.</p>
+    <input id="nameInput" type="text" placeholder="Enter your name" 
+           class="w-full p-3 border border-red-400 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-red-500 text-black">
+    <button onclick="showEnemyMessage()" 
+            class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-xl shadow-lg transition animate-bounce">
+      Surprise 😏
+    </button>
+    <div id="messageSection" class="mt-6 hidden">
+      <h2 id="enemyMessage" class="text-lg font-semibold text-yellow-300"></h2>
+    </div>
+  </div>
+  <audio id="thunderSound" src="https://www.soundjay.com/nature/thunder-1.mp3"></audio>
+  <script>
+    const ramyaMessage = 
+      "A good friend is hard to find and lucky to have. But I am very lucky to have you in my life. I always pray to God that He gives you a healthy life and the best life partner. From 9th standard, I have really got a friend + enemy in my life, who sometimes supports, sometimes makes me sad, sometimes gets angry at me, and sometimes protects me. I am so thankful to God for giving me a friend and enemy like you.";
+    function showEnemyMessage() {
+      const name = document.getElementById('nameInput').value.trim();
+      if (name.toLowerCase() === "ramya") {
+        document.getElementById('enemyMessage').innerText = ramyaMessage;
+        document.getElementById('messageSection').classList.remove('hidden');
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          colors: ['#ff0000', '#ff6600', '#ffff00'],
+          origin: { y: 0.6 }
+        });
+        const lightning = document.getElementById('lightningEffect');
+        lightning.classList.add('flash');
+        setTimeout(() => lightning.classList.remove('flash'), 500);
+        document.getElementById('thunderSound').play();
+      } else {
+        alert("This surprise is only for Ramya 😏");
+      }
+    }
+    const emojis = ["😈", "🔥", "💢", "😏", "😜"];
+    function createEmoji() {
+      const emoji = document.createElement("div");
+      emoji.classList.add("emoji");
+      emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * window.innerWidth + "px";
+      emoji.style.animationDuration = (3 + Math.random() * 3) + "s";
+      document.getElementById("emoji-container").appendChild(emoji);
+      setTimeout(() => { emoji.remove(); }, 6000);
+    }
+    setInterval(createEmoji, 300);
+  </script>
+</body>
+</html>
